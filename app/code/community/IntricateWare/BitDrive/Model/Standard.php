@@ -54,13 +54,42 @@ class IntricateWare_BitDrive_Model_Standard extends Mage_Payment_Model_Method_Ab
     protected $_isInitializeNeeded = true;
     
     /**
+     * List of supported currency codes.
+     * @type array
+     */
+    private $_supportedCurrencies = array(
+        'AUD',
+        'BRL',
+        'BTC',
+        'CAD',
+        'CHF',
+        'CLP',
+        'CNY',
+        'DKK',
+        'EUR',
+        'GBP',
+        'HKD',
+        'ISK',
+        'JPY',
+        'KRW',
+        'NZD',
+        'PLN',
+        'RUB',
+        'SEK',
+        'SGD',
+        'THB',
+        'TWD',
+        'USD'
+    );
+    
+    /**
      * Whether method is available for specified currency.
      *
      * @param string $currencyCode
      * @return bool
      */
     public function canUseForCurrency($currencyCode) {
-        return ( in_array(strtolower($currencyCode), array('usd', 'btc')) );
+        return ( in_array($currencyCode, $this->_supportedCurrencies) );
     }
     
     /**
@@ -140,8 +169,8 @@ class IntricateWare_BitDrive_Model_Standard extends Mage_Payment_Model_Method_Ab
         return array(
             'bd-cmd'            => 'pay',
             'bd-merchant'       => $this->getConfigValue('merchant_id'),
-            'bd-currency'       => $order->getBaseCurrencyCode(),
-            'bd-amount'         => $order->getBaseGrandTotal(),
+            'bd-currency'       => $order->getOrderCurrencyCode(),
+            'bd-amount'         => $order->getGrandTotal(),
             'bd-memo'           => $this->_buildTransactionMemo($order),
             'bd-invoice'        => $orderIncrementId,
             'bd-success-url'    => Mage::getUrl('bitdrive/standard/success', array('_secure' => true)),
